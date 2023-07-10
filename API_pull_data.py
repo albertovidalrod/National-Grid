@@ -111,59 +111,95 @@ save_string = f"historic_demand_2009_{final_year}"
 df.to_csv(data_dir + f"/{save_string}.csv")
 df.to_csv(data_dir + f"/{save_string}.parquet")
 
+# Save metadata
+# Current date
+current_date = datetime.datetime.now()
+current_date_string = current_date.strftime("%d/%m/%Y")
+df_metadata = {
+    "last updated": current_date_string,
+    "last entry date": df["settlement_date"].iloc[-1],
+    "columns": {column: str(df[column].dtype) for column in df.columns},
+    "dataframe shape": {
+        "number rows": df.shape[0],
+        "number columns": df.shape[1],
+    },
+}
+
+# Save the metadata to a JSON file
+metadata_path = data_dir + f"/{save_string}_metadata.json"
+with open(metadata_path, "w") as file:
+    json.dump(df_metadata, file, indent=4)
+
 # Clean the data before saving the dataframe
-# sort valeus
-df.sort_values(
+# sort values
+df_clean = df.copy()
+df_clean.sort_values(
     by=["settlement_date", "settlement_period"], inplace=True, ignore_index=True
 )
 
 # drop columns with nan values
-df.drop(columns=["nsl_flow", "eleclink_flow"], axis=1, inplace=True)
+df_clean.drop(columns=["nsl_flow", "eleclink_flow"], axis=1, inplace=True)
 
 # Drop rows where settlement_period value is greater than 48
-df.drop(index=df[df["settlement_period"] > 48].index, inplace=True)
-df.reset_index(drop=True, inplace=True)
+df_clean.drop(index=df_clean[df_clean["settlement_period"] > 48].index, inplace=True)
+df_clean.reset_index(drop=True, inplace=True)
 
 # remove outliers
-null_days = df.loc[df["tsd"] == 0.0, "settlement_date"].unique().tolist()
+null_days = df_clean.loc[df_clean["tsd"] == 0.0, "settlement_date"].unique().tolist()
 
 null_days_index = []
 
 for day in null_days:
-    null_days_index.append(df[df["settlement_date"] == day].index.tolist())
+    null_days_index.append(df_clean[df_clean["settlement_date"] == day].index.tolist())
 
 null_days_index = [item for sublist in null_days_index for item in sublist]
 
-df.drop(index=null_days_index, inplace=True)
-df.reset_index(drop=True, inplace=True)
+df_clean.drop(index=null_days_index, inplace=True)
+df_clean.reset_index(drop=True, inplace=True)
 
 # add column with date
-df["period_hour"] = (df["settlement_period"]).apply(
+df_clean["period_hour"] = (df_clean["settlement_period"]).apply(
     lambda x: str(datetime.timedelta(hours=(x - 1) * 0.5))
 )
 
-df.loc[df["period_hour"] == "1 day, 0:00:00", "period_hour"] = "0:00:00"
+df_clean.loc[df_clean["period_hour"] == "1 day, 0:00:00", "period_hour"] = "0:00:00"
 
 # Move the new column
-column_to_move = df.pop("period_hour")
-df.insert(2, "period_hour", column_to_move)
+column_to_move = df_clean.pop("period_hour")
+df_clean.insert(2, "period_hour", column_to_move)
 
 # Combine hour and date
-df["settlement_date"] = pd.to_datetime(
-    (df["settlement_date"] + " " + df["period_hour"])
+df_clean["settlement_date"] = pd.to_datetime(
+    (df_clean["settlement_date"] + " " + df_clean["period_hour"])
 )
 
 # replace index using date
-df.set_index("settlement_date", inplace=True)
-df.sort_index(inplace=True)
+df_clean.set_index("settlement_date", inplace=True)
+df_clean.sort_index(inplace=True)
 
 # Make sure that number-type columns are integer format
-int_columns = [column for column in df.columns if column != "period_hour"]
-df[int_columns] = df[int_columns].astype(int)
+int_columns = [column for column in df_clean.columns if column != "period_hour"]
+df_clean[int_columns] = df_clean[int_columns].astype(int)
 
 
 ########################################
 # Save csv
 save_string = f"historic_demand_2009_{final_year}_noNaN"
-df.to_csv(data_dir + f"/{save_string}.csv")
-df.to_parquet(data_dir + f"/{save_string}.parquet")
+df_clean.to_csv(data_dir + f"/{save_string}.csv")
+df_clean.to_parquet(data_dir + f"/{save_string}.parquet")
+
+# Save metadata
+df_clean_metadata = {
+    "last updated": current_date_string,
+    "last entry date": str(df_clean.index[-1]),
+    "columns": {column: str(df_clean[column].dtype) for column in df_clean.columns},
+    "dataframe shape": {
+        "number rows": df_clean.shape[0],
+        "number columns": df_clean.shape[1],
+    },
+}
+
+# Save the metadata to a JSON file
+metadata_path = data_dir + f"/{save_string}_metadata.json"
+with open(metadata_path, "w") as file:
+    json.dump(df_clean_metadata, file, indent=4)
