@@ -17,7 +17,7 @@ jobs:
       - name: Create zip file
         run: |
           cd data
-          zip -r files.zip *.csv
+          zip -r files.zip *.csv -x "historic_demand_2009_2022_noNaN.csv", "historic_demand_2009_2022.csv"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
