@@ -1,9 +1,8 @@
 name: fetch API data
 
 on:
-#   push:
-#     paths:
-#       - 'data/Scraped data/**.csv'
+  schedule:
+    - cron: 30 12 * * 4 # At 12:30 every Thursday
   workflow_dispatch:
 
 jobs:
@@ -27,6 +26,11 @@ jobs:
       - name: execute py script
         run: |
           python API_pull_data.py
+
+      - name: Create zip file
+        run: |
+          cd data
+          zip -r files2.zip *.csv -x "historic_demand_2009_2022_noNaN.csv" "historic_demand_2009_2022.csv"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
