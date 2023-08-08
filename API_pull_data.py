@@ -120,7 +120,7 @@ df_parquet[int_columns] = df_parquet[int_columns].astype(int)
 # Save file
 save_string = f"historic_demand_2009_{final_year}"
 df.to_csv(data_kaggle_dir + f"/{save_string}.csv")
-df.to_parquet(data_dir + f"/{save_string}.parquet")
+df_parquet.to_parquet(data_dir + f"/{save_string}.parquet")
 
 # Save metadata
 # Current date
