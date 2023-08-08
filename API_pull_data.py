@@ -10,6 +10,7 @@ import requests
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(current_dir, "data")
+data_kaggle_dir = os.path.join(current_dir, "data/kaggle")
 os.makedirs(data_dir, exist_ok=True)
 
 
@@ -52,7 +53,7 @@ df_last_year.columns = df_last_year.columns.str.lower()
 df_last_year.drop(columns=["_id"], axis=1, inplace=True)
 
 save_string = f"historic_demand_year_{final_year}"
-df_last_year.to_csv(data_dir + f"/{save_string}.csv", index=False)
+df_last_year.to_csv(data_kaggle_dir + f"/{save_string}.csv", index=False)
 df_last_year.to_parquet(data_dir + f"/{save_string}.parquet", index=False)
 
 # Create an empty datafram to store the results
@@ -108,8 +109,8 @@ df["is_holiday"] = df["is_holiday"].astype(int)
 ##############################################
 # Save file
 save_string = f"historic_demand_2009_{final_year}"
-df.to_csv(data_dir + f"/{save_string}.csv")
-df.to_csv(data_dir + f"/{save_string}.parquet")
+df.to_csv(data_kaggle_dir + f"/{save_string}.csv")
+df.to_parquet(data_dir + f"/{save_string}.parquet")
 
 # Save metadata
 # Current date
@@ -185,7 +186,7 @@ df_clean[int_columns] = df_clean[int_columns].astype(int)
 ########################################
 # Save csv
 save_string = f"historic_demand_2009_{final_year}_noNaN"
-df_clean.to_csv(data_dir + f"/{save_string}.csv")
+df_clean.to_csv(data_kaggle_dir + f"/{save_string}.csv")
 df_clean.to_parquet(data_dir + f"/{save_string}.parquet")
 
 # Save metadata
