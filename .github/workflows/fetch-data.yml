@@ -11,8 +11,9 @@ jobs:
     steps:
 
       - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        id: get_date
+        # run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: checkout repo content
         uses: actions/checkout@v3 # checkout the repository content to github runner
@@ -40,9 +41,9 @@ jobs:
 
           # cd data/kaggle
           # kaggle datasets metadata albertovidalrod/electricity-consumption-uk-20092022
-          # kaggle datasets version -m "Data update {date}"
+          # kaggle datasets version -m "Data update ${{ steps.get_date.outputs.date}}"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "Data update ${{ steps.date.outputs.date}}"
+          git commit -m "Data update ${{ steps.get_date.outputs.date}}"
           git push
