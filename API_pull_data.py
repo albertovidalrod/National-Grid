@@ -106,6 +106,10 @@ df["is_holiday"] = df["settlement_date"].apply(
 )
 df["is_holiday"] = df["is_holiday"].astype(int)
 
+# Make sure that number-type columns are integer format
+int_columns = [column for column in df.columns if column != "period_hour"]
+df[int_columns] = df[int_columns].astype(int)
+
 ##############################################
 # Save file
 save_string = f"historic_demand_2009_{final_year}"
