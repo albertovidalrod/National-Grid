@@ -107,8 +107,14 @@ df["is_holiday"] = df["settlement_date"].apply(
 df["is_holiday"] = df["is_holiday"].astype(int)
 
 # Make sure that number-type columns are integer format
-int_columns = [column for column in df.columns if column != "period_hour"]
-df[int_columns] = df[int_columns].astype(int)
+df_parquet = df.copy()
+df_parquet = df_parquet.fillna(0)
+int_columns = [
+    column
+    for column in df.columns
+    if column != "period_hour" and column != "settlement_date"
+]
+df_parquet[int_columns] = df_parquet[int_columns].astype(int)
 
 ##############################################
 # Save file
