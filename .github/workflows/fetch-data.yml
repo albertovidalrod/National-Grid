@@ -12,7 +12,6 @@ jobs:
 
       - name: Get current date
         id: get_date
-        # run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: checkout repo content
@@ -33,15 +32,13 @@ jobs:
           python API_pull_data.py
 
       - name: update kaggle dataset
-        # env:
-        #   # Do not leak your credentials.
-        #   KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        #   KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
-
-          # cd data/kaggle
-          # kaggle datasets metadata albertovidalrod/electricity-consumption-uk-20092022
-          # kaggle datasets version -m "Data update ${{ steps.get_date.outputs.date}}"
+          cd data/kaggle
+          kaggle datasets metadata albertovidalrod/electricity-consumption-uk-20092022
+          kaggle datasets version -m "Data update ${{ steps.get_date.outputs.date}}"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
