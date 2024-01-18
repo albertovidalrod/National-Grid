@@ -33,26 +33,26 @@ demand_dict = {
     "historic-demand-data-2009": "ed8a37cb-65ac-4581-8dbc-a3130780da3a",
 }
 
-# Define url tpo pull data from
-url = "https://data.nationalgrideso.com/api/3/action/datastore_search"
+# Define URL tpo pull data from
+URL = "https://data.nationalgrideso.com/api/3/action/datastore_search"
 
 # save information from last year
-final_year = 2023
-if final_year % 4 == 0:
+FINAL_YEAR = 2023
+if FINAL_YEAR % 4 == 0:
     limit = 48 * 366
 else:
     limit = 48 * 365
-dict_key = "historic-demand-data-" + str(final_year)
+dict_key = "historic-demand-data-" + str(FINAL_YEAR)
 parameters = {"resource_id": demand_dict[dict_key], "limit": limit}
 
-data_request = requests.get(url, params=parameters)
+data_request = requests.get(URL, params=parameters)
 data_request_json = data_request.json()
 
 df_last_year = pd.DataFrame(data_request_json["result"]["records"])
 df_last_year.columns = df_last_year.columns.str.lower()
 df_last_year.drop(columns=["_id"], axis=1, inplace=True)
 
-save_string = f"historic_demand_year_{final_year}"
+save_string = f"historic_demand_year_{FINAL_YEAR}"
 df_last_year.to_csv(data_kaggle_dir + f"/{save_string}.csv", index=False)
 df_last_year.to_parquet(data_dir + f"/{save_string}.parquet", index=False)
 
@@ -60,7 +60,7 @@ df_last_year.to_parquet(data_dir + f"/{save_string}.parquet", index=False)
 df = pd.DataFrame()
 
 # Use a for loop the data for each year and store it in the same dataframe
-for i, year in enumerate(range(2009, final_year + 1)):
+for i, year in enumerate(range(2009, FINAL_YEAR + 1)):
     if year % 4 == 0:
         limit = 48 * 366
     else:
@@ -68,7 +68,7 @@ for i, year in enumerate(range(2009, final_year + 1)):
     dict_key = "historic-demand-data-" + str(year)
     parameters = {"resource_id": demand_dict[dict_key], "limit": limit}
 
-    data_request = requests.get(url, params=parameters)
+    data_request = requests.get(URL, params=parameters)
     data_request_json = data_request.json()
 
     df = pd.concat(
@@ -83,7 +83,7 @@ df.drop(columns=["_id"], axis=1, inplace=True)
 
 # add bank holidays
 bank_holiday_england = holidays.UK(
-    subdiv="England", years=range(2009, final_year + 2), observed=True
+    subdiv="England", years=range(2009, FINAL_YEAR + 2), observed=True
 ).items()
 
 # Create empty lists to store data
@@ -118,7 +118,7 @@ df_parquet[int_columns] = df_parquet[int_columns].astype(int)
 
 ##############################################
 # Save file
-save_string = f"historic_demand_2009_{final_year}"
+save_string = f"historic_demand_2009_{FINAL_YEAR}"
 df.to_csv(data_kaggle_dir + f"/{save_string}.csv")
 df_parquet.to_parquet(data_dir + f"/{save_string}.parquet")
 
@@ -149,7 +149,10 @@ df_clean.sort_values(
 )
 
 # drop columns with nan values
-df_clean.drop(columns=["nsl_flow", "eleclink_flow"], axis=1, inplace=True)
+nan_values = df.isna()
+nan_counts = nan_counts = nan_values.sum()
+columns_with_many_nans = nan_counts[nan_counts > 48 * 366 * 9].index
+df_clean.drop(columns=columns_with_many_nans, axis=1, inplace=True)
 
 # Drop rows where settlement_period value is greater than 48
 df_clean.drop(index=df_clean[df_clean["settlement_period"] > 48].index, inplace=True)
@@ -195,7 +198,7 @@ df_clean[int_columns] = df_clean[int_columns].astype(int)
 
 ########################################
 # Save csv
-save_string = f"historic_demand_2009_{final_year}_noNaN"
+save_string = f"historic_demand_2009_{FINAL_YEAR}_noNaN"
 df_clean.to_csv(data_kaggle_dir + f"/{save_string}.csv")
 df_clean.to_parquet(data_dir + f"/{save_string}.parquet")
 

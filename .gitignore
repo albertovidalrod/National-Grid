@@ -1,8 +1,12 @@
+# Folders
 /.ipynb_checkpoints
 /API files
+/Kaggle script
+/IBM Course Submission
+/env
+/venv
 
+# Files
 .DS_Store
 
-/Kaggle script
-
-/IBM Course Submission
+.vscode/launch.json
