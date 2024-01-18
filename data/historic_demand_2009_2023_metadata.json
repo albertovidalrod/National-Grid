@@ -1,6 +1,6 @@
 {
-    "last updated": "09/08/2023",
-    "last entry date": "2023-07-19",
+    "last updated": "18/01/2024",
+    "last entry date": "2023-12-28",
     "columns": {
         "settlement_date": "object",
         "settlement_period": "int64",
@@ -21,10 +21,12 @@
         "nemo_flow": "int64",
         "nsl_flow": "float64",
         "eleclink_flow": "float64",
+        "scottish_transfer": "float64",
+        "viking_flow": "float64",
         "is_holiday": "int64"
     },
     "dataframe shape": {
-        "number rows": 255022,
-        "number columns": 20
+        "number rows": 262800,
+        "number columns": 22
     }
 }

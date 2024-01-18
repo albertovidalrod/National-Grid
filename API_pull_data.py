@@ -199,7 +199,7 @@ df_clean[int_columns] = df_clean[int_columns].astype(int)
 ########################################
 # Save csv
 save_string = f"historic_demand_2009_{FINAL_YEAR}_noNaN"
-df_clean.to_csv(data_kaggle_dir + f"/{save_string}.csv")
+df_clean.to_csv(data_dir + f"/{save_string}.csv")  # TODO
 df_clean.to_parquet(data_dir + f"/{save_string}.parquet")
 
 # Save metadata

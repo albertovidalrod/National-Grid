@@ -36,9 +36,9 @@ jobs:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
-          cd data/kaggle
-          kaggle datasets metadata albertovidalrod/electricity-consumption-uk-20092022
-          kaggle datasets version -m "Data update ${{ steps.get_date.outputs.date}}"
+          # cd data/kaggle
+          # kaggle datasets metadata albertovidalrod/electricity-consumption-uk-20092022
+          # kaggle datasets version -m "Data update ${{ steps.get_date.outputs.date}}"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
