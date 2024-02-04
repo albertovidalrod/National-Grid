@@ -1,0 +1,32 @@
+{
+    "last updated": "04/02/2024",
+    "last entry date": "2024-01-14",
+    "columns": {
+        "settlement_date": "object",
+        "settlement_period": "int64",
+        "nd": "int64",
+        "tsd": "int64",
+        "england_wales_demand": "int64",
+        "embedded_wind_generation": "int64",
+        "embedded_wind_capacity": "int64",
+        "embedded_solar_generation": "int64",
+        "embedded_solar_capacity": "object",
+        "non_bm_stor": "int64",
+        "pump_storage_pumping": "int64",
+        "ifa_flow": "int64",
+        "ifa2_flow": "int64",
+        "britned_flow": "int64",
+        "moyle_flow": "int64",
+        "east_west_flow": "int64",
+        "nemo_flow": "int64",
+        "nsl_flow": "float64",
+        "eleclink_flow": "float64",
+        "scottish_transfer": "float64",
+        "viking_flow": "float64",
+        "is_holiday": "int64"
+    },
+    "dataframe shape": {
+        "number rows": 263616,
+        "number columns": 22
+    }
+}

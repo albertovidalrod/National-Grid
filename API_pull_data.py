@@ -1,7 +1,6 @@
 import datetime
 import json
 import os
-from time import sleep, time
 
 import holidays
 import numpy as np
@@ -16,6 +15,7 @@ os.makedirs(data_dir, exist_ok=True)
 
 # Create a dictionary to use the right parameter to pull each year's data
 demand_dict = {
+    "historic-demand-data-2024": "f6d02c0f-957b-48cb-82ee-09003f2ba759",
     "historic-demand-data-2023": "bf5ab335-9b40-4ea4-b93a-ab4af7bce003",
     "historic-demand-data-2022": "bb44a1b5-75b1-4db2-8491-257f23385006",
     "historic-demand-data-2021": "18c69c42-f20d-46f0-84e9-e279045befc6",
@@ -37,7 +37,7 @@ demand_dict = {
 URL = "https://data.nationalgrideso.com/api/3/action/datastore_search"
 
 # save information from last year
-FINAL_YEAR = 2023
+FINAL_YEAR = datetime.datetime.now().year
 if FINAL_YEAR % 4 == 0:
     limit = 48 * 366
 else:
@@ -199,7 +199,7 @@ df_clean[int_columns] = df_clean[int_columns].astype(int)
 ########################################
 # Save csv
 save_string = f"historic_demand_2009_{FINAL_YEAR}_noNaN"
-df_clean.to_csv(data_dir + f"/{save_string}.csv")  # TODO
+df_clean.to_csv(data_kaggle_dir + f"/{save_string}.csv")
 df_clean.to_parquet(data_dir + f"/{save_string}.parquet")
 
 # Save metadata
