@@ -1,6 +1,6 @@
 {
-    "last updated": "14/03/2024",
-    "last entry date": "2024-02-22",
+    "last updated": "21/03/2024",
+    "last entry date": "2024-02-29",
     "columns": {
         "settlement_date": "object",
         "settlement_period": "int64",
@@ -26,7 +26,7 @@
         "is_holiday": "int64"
     },
     "dataframe shape": {
-        "number rows": 265488,
+        "number rows": 265824,
         "number columns": 22
     }
 }
